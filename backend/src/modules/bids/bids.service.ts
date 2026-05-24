@@ -24,7 +24,6 @@ export class BidsService {
   }
 
   async placeBid(createBidDto: CreateBidDto) {
-    // Prisma's Interactive Transaction ensures these queries run atomically
     return this.prisma.$transaction(async (tx) => {
       const highestBidRow = await tx.bid.findFirst({
         orderBy: { amount: 'desc' },
@@ -42,7 +41,6 @@ export class BidsService {
         );
       }
 
-      // Save the new bid
       const newBid = await tx.bid.create({
         data: {
           bidderEmail: createBidDto.bidderEmail,
@@ -50,7 +48,6 @@ export class BidsService {
         },
       });
 
-      // Fetch the updated history
       const history = await tx.bid.findMany({
         orderBy: { createdAt: 'desc' },
         take: 5,

@@ -1,33 +1,117 @@
+// 'use client';
+
+// import Image from 'next/image';
+// import { useBidding } from '@/hooks/useBidding';
+
+// export default function ItemDisplay() {
+//   const { currentHighest } = useBidding();
+
+//   return (
+//     <div className="relative bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
+//       <div className="relative w-64 h-64 bg-gray-100 rounded-full mb-6 flex items-center justify-center overflow-hidden border-4 border-gray-50 ">
+//         <Image
+//           src="/watch1.jpg"
+//           alt="Rolex Datejust 16030"
+//           fill
+//           className="object-cover"
+//           priority
+//         />
+//       </div>
+
+//       <h2 className="text-2xl font-bold text-gray-900 mb-2">Rolex Datejust 16030</h2>
+//       <p className="text-gray-500 mb-6 max-w-sm">
+//         Rolex Datejust 16030, a 36 mm steel automatic men’s watch from the 1980s with a repainted
+//         white Buckley dial, steel bracelet with original clasp, no box or papers.
+//       </p>
+//       <div className="w-full grid grid-cols-2 gap-4 border-t border-gray-100 pt-6">
+//         <div className="text-left">
+//           <p className="text-sm text-gray-500 font-medium">Starting Price</p>
+//           <p className="text-xl font-semibold text-gray-900">$50.00</p>
+//         </div>
+//         <div className="text-right">
+//           <p className="text-sm text-gray-500 font-medium"> Current Highest Bid</p>
+//           <p className="text-2xl font-bold text-green-600">${currentHighest.toFixed(2)}</p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
 'use client';
 
+import { useState } from 'react';
+import Image from 'next/image';
 import { useBidding } from '@/hooks/useBidding';
 
 export default function ItemDisplay() {
-  const { currentHighest, isConnected } = useBidding();
+  const { currentHighest } = useBidding();
+
+  const images = ['/watch1.jpg', '/watch2.jpg', '/watch3.jpg'];
+
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   return (
-    <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex flex-col items-center text-center">
-      <div className="w-64 h-64 bg-gray-100 rounded-full mb-6 flex items-center justify-center overflow-hidden border-4 border-gray-50 ">
-        <span className="text-gray-400 text-sm">Image here</span>
-        <div className={`absolute top-4 right-4 w-3 h-3 rounded-full`}>
-          ${isConnected ? 'bg-green-500' : 'bg-red-500'}{' '}
-        </div>
+    <div className="relative bg-white rounded-2xl border border-gray-200 shadow-lg flex flex-col h-full overflow-hidden transition-all duration-300">
+      <div className="absolute top-4 left-4 z-10 flex gap-2">
+        <span className="bg-gray-900 text-white text-[10px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-sm shadow-sm">
+          Lot 01
+        </span>
+        <span className="bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-sm shadow-sm">
+          Vintage
+        </span>
       </div>
 
-      <h2 className="text-2xl font-bold text-gray-900 mb-2">Vintage Rolex Day-Date "Rresident"</h2>
-      <p className="text-gray-500 mb-6 max-w-sm">
-        An iconic 1980s reference featuring the signature day and date complications. Housed in a
-        classic 36mm case with a fluted bezed, this legendary timepiece represents the pinnacle of
-        vintage luxury and horological history.
-      </p>
-      <div className="w-full grid grid-cols-2 gap-4 border-t border-gray-100 pt-6">
-        <div className="text-left">
-          <p className="text-sm text-gray-500 font-medium">Starting Price</p>
-          <p className="text-xl font-semibold text-gray-900">$50.00</p>
-        </div>
-        <div className="text-right">
-          <p className="text-sm text-gray-500 font-medium"> Current Highest Bid</p>
-          <p className="text-2xl font-bold text-green-600">${currentHighest.toFixed(2)}</p>
+      <div className="relative w-full aspect-square bg-gray-50 flex items-center justify-center overflow-hidden border-b border-gray-100">
+        <Image
+          src={images[activeImageIndex]}
+          alt={`Rolex Datejust 16030 View ${activeImageIndex + 1}`}
+          fill
+          className="object-contain p-8 transition-opacity duration-300"
+          priority
+        />
+      </div>
+
+      <div className="flex gap-3 p-6 pb-0 overflow-x-auto">
+        {images.map((img, index) => (
+          <button
+            key={img}
+            onClick={() => setActiveImageIndex(index)}
+            className={`relative w-16 h-16 rounded-md overflow-hidden border-2 transition-all ${
+              activeImageIndex === index
+                ? 'border-gray-900 shadow-md'
+                : 'border-transparent opacity-60 hover:opacity-100'
+            }`}
+          >
+            <Image src={img} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+          </button>
+        ))}
+      </div>
+
+      {/* Item Details */}
+      <div className="p-6 flex flex-col grow">
+        <h2 className="text-2xl font-black text-gray-900 mb-3 tracking-tight">
+          Rolex Datejust 16030
+        </h2>
+        <p className="text-gray-500 text-sm leading-relaxed mb-6 grow">
+          A classic 36mm steel automatic men’s watch from the 1980s featuring a distinct white
+          Buckley dial. Complete with steel bracelet and original clasp. A perfect entry into
+          vintage horology.
+        </p>
+
+        {/* Pricing Grid */}
+        <div className="w-full grid grid-cols-2 gap-4 border-t border-gray-100 pt-6">
+          <div className="text-left">
+            <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">
+              Starting Price
+            </p>
+            <p className="text-xl font-medium text-gray-500">$50.00</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">
+              Current Highest Bid
+            </p>
+            <p className="text-3xl font-black text-blue-600">${currentHighest.toFixed(2)}</p>
+          </div>
         </div>
       </div>
     </div>
