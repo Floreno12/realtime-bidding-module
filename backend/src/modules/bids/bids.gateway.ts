@@ -13,7 +13,8 @@ import { UsePipes, ValidationPipe } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: 'https://realtime-bidding-frontend.vercel.app',
+    credentials: true,
   },
 })
 export class BidsGateway implements OnGatewayConnection {
