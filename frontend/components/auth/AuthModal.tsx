@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { log } from 'console';
 
 export default function AuthModal() {
   const [email, setEmail] = useState('');
@@ -21,16 +20,12 @@ export default function AuthModal() {
     } else {
       setError('Please enter a valid email address (e.g. name@example.com)');
     }
-
-    // if (email.trim() && email.includes('@')) {
-    //   login(email.trim());
-    // }
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4">
-        <h2 className="text-2xl font-bold mb-2 text-center">Welcome to the Auction</h2>
+        <h2 className="text-2xl font-bold mb-2 text-center text-black">Welcome to the Auction</h2>
         <p className="text-gray-500 mb-6 text-center text-sm">
           Please enter your email to start bidding
         </p>
@@ -42,7 +37,7 @@ export default function AuthModal() {
               placeholder="Enter your email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+              className="w-full px-4 py-3 border text-black border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
             ></input>
             {error && <p className="mt-2 text-sm text-red-600 font-medium">{error}</p>}
           </div>
