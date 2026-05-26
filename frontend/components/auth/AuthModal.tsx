@@ -2,16 +2,29 @@
 
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { log } from 'console';
 
 export default function AuthModal() {
   const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
   const { login } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email.trim() && email.includes('@')) {
-      login(email.trim());
+    const cleanEmail = email.trim();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailRegex.test(cleanEmail)) {
+      setError('');
+      login(cleanEmail);
+    } else {
+      setError('Please enter a valid email address (e.g. name@example.com)');
     }
+
+    // if (email.trim() && email.includes('@')) {
+    //   login(email.trim());
+    // }
   };
 
   return (
@@ -31,6 +44,7 @@ export default function AuthModal() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
             ></input>
+            {error && <p className="mt-2 text-sm text-red-600 font-medium">{error}</p>}
           </div>
           <button
             type="submit"

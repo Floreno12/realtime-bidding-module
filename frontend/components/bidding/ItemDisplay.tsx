@@ -110,7 +110,10 @@ export default function ItemDisplay() {
             <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">
               Current Highest Bid
             </p>
-            <p className="text-3xl font-black text-blue-600">${currentHighest.toFixed(2)}</p>
+            <p className="text-3xl font-black text-blue-600">
+              {' '}
+              {currentHighest !== null ? `$${currentHighest.toFixed(2)}` : 'Loading...'}{' '}
+            </p>
           </div>
         </div>
       </div>

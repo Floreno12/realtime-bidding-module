@@ -6,8 +6,8 @@ const socket: Socket = io('http://localhost:3001', {
 });
 
 export const useBidding = () => {
-  const [currentHighest, setCurrentHighest] = useState<number>(50);
-  const [history, setHistory] = useState<any[]>([]);
+  const [currentHighest, setCurrentHighest] = useState<number | null>(null);
+  const [history, setHistory] = useState<any[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
 

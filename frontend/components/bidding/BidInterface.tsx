@@ -2,16 +2,24 @@
 
 import { useState } from 'react';
 import { useBidding } from '@/hooks/useBidding';
+import { useAuth } from '@/context/AuthContext';
 
 export default function BidInterface() {
   const { history, error, placeBid } = useBidding();
+  const { userEmail } = useAuth();
   const [amount, setAmount] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!amount) return;
+    if (!amount) {
+      return;
+    }
 
-    placeBid(Number(amount), 'reviewer@example.com');
+    if (!userEmail) {
+      return;
+    }
+
+    placeBid(Number(amount), userEmail);
     setAmount('');
   };
 
@@ -66,18 +74,23 @@ export default function BidInterface() {
               Live Bid History
             </h3>
             <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-              {history.length} Bids
+              {history?.length} Bids
             </span>
           </div>
 
           <div className="space-y-3 overflow-y-auto max-h-87.5  pr-2">
-            {history.length === 0 ? (
+            {history === null ? (
+              <div className="animate-pulse space-y-3">
+                {[1, 2].map((i) => (
+                  <div key={i} className="h-16 bg-gray-100 rounded-xl" />
+                ))}
+              </div>
+            ) : history?.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-4 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
                 <p className="text-gray-400 text-sm font-medium">No bids have been placed yet.</p>
-                <p className="text-gray-500 text-xs mt-1">Be the first to start the auction</p>
               </div>
             ) : (
-              history.map((bid, index) => {
+              history?.map((bid, index) => {
                 const isWinning = index === 0;
                 const initial = bid.bidderEmail ? bid.bidderEmail.charAt(0).toUpperCase() : '?';
 

@@ -4,6 +4,7 @@ import {
   MessageBody,
   WebSocketServer,
   ConnectedSocket,
+  OnGatewayConnection,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { BidsService } from './bids.service';
@@ -15,7 +16,7 @@ import { UsePipes, ValidationPipe } from '@nestjs/common';
     origin: '*',
   },
 })
-export class BidsGateway {
+export class BidsGateway implements OnGatewayConnection {
   @WebSocketServer()
   server!: Server;
 

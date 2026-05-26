@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service';
 import { CreateBidDto } from './create-bid.dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class BidsService {
@@ -24,36 +25,50 @@ export class BidsService {
   }
 
   async placeBid(createBidDto: CreateBidDto) {
-    return this.prisma.$transaction(async (tx) => {
-      const highestBidRow = await tx.bid.findFirst({
-        orderBy: { amount: 'desc' },
-      });
+    try {
+      return this.prisma.$transaction(
+        async (tx) => {
+          const highestBidRow = await tx.bid.findFirst({
+            orderBy: { amount: 'desc' },
+          });
 
-      const currentHighest = highestBidRow ? Number(highestBidRow.amount) : this.STARTING_PRICE;
-      const targetMinimum =
-        currentHighest === this.STARTING_PRICE && !highestBidRow
-          ? this.STARTING_PRICE
-          : currentHighest + this.MIN_INCREMENT;
+          const currentHighest = highestBidRow ? Number(highestBidRow.amount) : this.STARTING_PRICE;
+          const targetMinimum =
+            currentHighest === this.STARTING_PRICE && !highestBidRow
+              ? this.STARTING_PRICE
+              : currentHighest + this.MIN_INCREMENT;
 
-      if (createBidDto.amount < targetMinimum) {
+          if (createBidDto.amount < targetMinimum) {
+            throw new BadRequestException(
+              `Bid must be at least $${targetMinimum.toFixed(2)} (Minimum $${this.MIN_INCREMENT} increment).`,
+            );
+          }
+
+          const newBid = await tx.bid.create({
+            data: {
+              bidderEmail: createBidDto.bidderEmail,
+              amount: createBidDto.amount,
+            },
+          });
+
+          const history = await tx.bid.findMany({
+            orderBy: { createdAt: 'desc' },
+            take: 5,
+          });
+
+          return { newBid, history };
+        },
+        {
+          isolationLevel: 'Serializable' as any,
+        },
+      );
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError && error.code === 'P2034') {
         throw new BadRequestException(
-          `Bid must be at least $${targetMinimum.toFixed(2)} (Minimum $${this.MIN_INCREMENT} increment).`,
+          'High traffic on this item. Please try placing your bed again.',
         );
       }
-
-      const newBid = await tx.bid.create({
-        data: {
-          bidderEmail: createBidDto.bidderEmail,
-          amount: createBidDto.amount,
-        },
-      });
-
-      const history = await tx.bid.findMany({
-        orderBy: { createdAt: 'desc' },
-        take: 5,
-      });
-
-      return { newBid, history };
-    });
+      throw error;
+    }
   }
 }
