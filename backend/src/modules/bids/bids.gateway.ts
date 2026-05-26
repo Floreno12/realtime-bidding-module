@@ -13,7 +13,11 @@ import { UsePipes, ValidationPipe } from '@nestjs/common';
 
 @WebSocketGateway({
   cors: {
-    origin: ['https://realtime-bidding-frontend.vercel.app', 'https://new-t7bj.vercel.app'],
+    origin: [
+      'https://realtime-bidding-frontend.vercel.app',
+      'https://new-t7bj.vercel.app',
+      'http://localhost:3000',
+    ],
     credentials: true,
   },
 })
