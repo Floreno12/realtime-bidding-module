@@ -4,7 +4,7 @@ A full-stack, real-time bidding application built with **Next.js (App Router)** 
 
 ### Project Links
 
-- **Live Demo Link:** [https://new-t7bj.vercel.app/](https://new-t7bj.vercel.app/)
+- **Live Demo Link:** [https://realtime-bidding-module-prod.vercel.app/](https://realtime-bidding-module-prod.vercel.app/)
 
 ---
 
