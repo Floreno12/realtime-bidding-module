@@ -48,7 +48,6 @@ export default function ItemDisplay() {
         ))}
       </div>
 
-      {/* Item Details */}
       <div className="p-6 flex flex-col grow">
         <h2 className="text-2xl font-black text-gray-900 mb-3 tracking-tight">
           Rolex Datejust 16030
@@ -59,7 +58,6 @@ export default function ItemDisplay() {
           vintage horology.
         </p>
 
-        {/* Pricing Grid */}
         <div className="w-full grid grid-cols-2 gap-4 border-t border-gray-100 pt-6">
           <div className="text-left">
             <p className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">
