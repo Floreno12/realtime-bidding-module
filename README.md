@@ -8,6 +8,16 @@ A full-stack, real-time bidding application built with **Next.js (App Router)** 
 
 ---
 
+# Deployment & Infrastructure
+
+The application is fully deployed using split cloud environments for optimal performance:
+
+- **Frontend:** Hosted on **Vercel** for fast global asset delivery and optimized edge routing.
+- **Backend API:** Hosted on **Render**, containerizing the NestJS engine while maintaining persistent WebSocket connections.
+- **Database:** Powered by a serverless **Neon PostgreSQL** cloud instance.
+
+---
+
 ## Tech Stack & Library Rationales
 
 ### Frontend
